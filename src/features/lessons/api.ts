@@ -32,6 +32,17 @@ export type LessonDetail = {
   checkpoints: LessonCheckpoint[];
 };
 
+export type CheckpointAttemptDetail = {
+  id: string;
+  lessonAttemptId: string;
+  checkpointId: string;
+  status: string;
+  title: string;
+  instruction: string;
+  captureGuidance: string | null;
+  position: number;
+};
+
 function asRecord(value: unknown): Record<string, unknown> {
   if (!value || typeof value !== 'object' || Array.isArray(value)) throw new Error('unexpected_server_shape');
   return value as Record<string, unknown>;
@@ -126,5 +137,41 @@ export async function getCurrentCheckpointAttempt(lessonAttemptId: string) {
     id: String(row.id),
     checkpointId: String(row.checkpoint_id),
     status: String(row.status),
+  };
+}
+
+export async function getCheckpointAttemptDetail(
+  lessonAttemptId: string,
+  checkpointAttemptId: string,
+): Promise<CheckpointAttemptDetail> {
+  const supabase = getSupabaseClient();
+  const attemptResult = await supabase
+    .from('checkpoint_attempts')
+    .select('id,lesson_attempt_id,checkpoint_id,status')
+    .eq('id', checkpointAttemptId)
+    .eq('lesson_attempt_id', lessonAttemptId)
+    .single();
+
+  if (attemptResult.error || !attemptResult.data) throw new Error('checkpoint_attempt_not_found');
+  const attempt = asRecord(attemptResult.data);
+
+  const checkpointResult = await supabase
+    .from('lesson_checkpoints')
+    .select('id,position,title,instruction,capture_guidance')
+    .eq('id', String(attempt.checkpoint_id))
+    .single();
+
+  if (checkpointResult.error || !checkpointResult.data) throw new Error('checkpoint_not_found');
+  const checkpoint = asRecord(checkpointResult.data);
+
+  return {
+    id: String(attempt.id),
+    lessonAttemptId: String(attempt.lesson_attempt_id),
+    checkpointId: String(attempt.checkpoint_id),
+    status: String(attempt.status),
+    title: String(checkpoint.title),
+    instruction: String(checkpoint.instruction),
+    captureGuidance: checkpoint.capture_guidance == null ? null : String(checkpoint.capture_guidance),
+    position: Number(checkpoint.position),
   };
 }
