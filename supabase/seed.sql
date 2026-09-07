@@ -1,0 +1,2 @@
+-- Deterministic local seed placeholder.
+-- Product/catalog seed data will be added only in the implementation task that owns it.
