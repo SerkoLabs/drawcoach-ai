@@ -52,7 +52,8 @@ export default function AuthScreen() {
       if (snapshot.phase === 'ready') {
         router.replace('/(tabs)');
       } else if (snapshot.phase === 'onboarding-incomplete') {
-        router.replace('/(onboarding)');
+        if (router.canGoBack()) router.back();
+        else router.replace('/(onboarding)');
       }
     } catch (error) {
       setMessage(authErrorMessage(error));
