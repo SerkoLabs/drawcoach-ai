@@ -3,20 +3,18 @@ import { useRouter } from 'expo-router';
 import { AppButton } from '@/components/ui/app-button';
 import { MessageState } from '@/components/ui/message-state';
 import { Screen } from '@/components/ui/screen';
+import { t } from '@/i18n';
 
 export default function AuthScreen() {
   const router = useRouter();
 
   return (
     <Screen
-      title="Hesabına giriş yap"
-      description="Çizimlerin ve gelişim geçmişin yalnızca senin hesabında tutulacak."
-      footer={<AppButton label="Geri dön" variant="secondary" onPress={() => router.back()} />}
+      title={t('auth.title')}
+      description={t('auth.description')}
+      footer={<AppButton label={t('common.back')} variant="secondary" onPress={() => router.back()} />}
     >
-      <MessageState
-        title="Kimlik doğrulama sıradaki aşamada bağlanacak"
-        body="Bu ekran gerçek giriş akışı hazır olmadan sahte bir giriş deneyimi göstermiyor."
-      />
+      <MessageState title={t('auth.placeholderTitle')} body={t('auth.placeholderBody')} />
     </Screen>
   );
 }
