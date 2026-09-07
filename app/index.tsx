@@ -2,11 +2,12 @@ import { useRouter } from 'expo-router';
 import { SafeAreaView, ScrollView, StyleSheet, Text, View } from 'react-native';
 
 import { AppButton } from '@/components/ui/app-button';
+import { t } from '@/i18n';
 
 const FEATURES = [
-  ['01', 'Adım adım öğren', 'Dersleri küçük, uygulanabilir aşamalara böl.'],
-  ['02', 'Çizimini göster', 'Her checkpointte çalışmanı fotoğraflayıp değerlendir.'],
-  ['03', 'Düzelt ve geliş', 'Tek seferde en önemli hataya odaklanan net tavsiye al.'],
+  ['01', t('welcome.feature.1.title'), t('welcome.feature.1.body')],
+  ['02', t('welcome.feature.2.title'), t('welcome.feature.2.body')],
+  ['03', t('welcome.feature.3.title'), t('welcome.feature.3.body')],
 ] as const;
 
 export default function WelcomeScreen() {
@@ -15,18 +16,18 @@ export default function WelcomeScreen() {
   return (
     <SafeAreaView style={styles.safeArea}>
       <ScrollView contentContainerStyle={styles.content}>
-        <View style={styles.artCard} accessibilityLabel="DrawCoach manzara çalışma alanı">
+        <View style={styles.artCard} accessibilityLabel={t('welcome.artAccessibility')}>
           <Text style={styles.artEyebrow}>DRAWCOACH AI</Text>
           <View style={styles.sun} />
           <View style={styles.mountainBack} />
           <View style={styles.mountainFront} />
           <View style={styles.horizon} />
-          <Text style={styles.artCaption}>MANZARA • DERS 1</Text>
+          <Text style={styles.artCaption}>{t('welcome.artCaption')}</Text>
         </View>
 
         <View style={styles.headingBlock}>
           <Text style={styles.brand}>DrawCoach</Text>
-          <Text style={styles.tagline}>Her çiziminde yanında bir sanat rehberi.</Text>
+          <Text style={styles.tagline}>{t('welcome.tagline')}</Text>
         </View>
 
         <View style={styles.featureList}>
@@ -44,12 +45,12 @@ export default function WelcomeScreen() {
         </View>
 
         <AppButton
-          label="Hemen Başla"
-          accessibilityHint="Kişisel öğrenme profili akışını açar"
+          label={t('welcome.start')}
+          accessibilityHint={t('welcome.startHint')}
           onPress={() => router.push('/(onboarding)')}
         />
-        <AppButton label="Uygulama iskeletini gör" variant="secondary" onPress={() => router.push('/(tabs)')} />
-        <Text style={styles.devNote}>Geliştirme önizlemesi • Sahte AI sonucu kullanılmıyor</Text>
+        <AppButton label={t('welcome.preview')} variant="secondary" onPress={() => router.push('/(tabs)')} />
+        <Text style={styles.devNote}>{t('welcome.devNote')}</Text>
       </ScrollView>
     </SafeAreaView>
   );
