@@ -24,6 +24,7 @@
     "aes-js": "3.1.2",
     "expo": "~57.0.17",
     "expo-constants": "~57.0.17",
+    "expo-image-picker": "~57.0.16",
     "expo-linking": "~57.0.4",
     "expo-router": "~57.0.19",
     "expo-secure-store": "~57.0.3",
