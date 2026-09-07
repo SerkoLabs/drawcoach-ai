@@ -14,12 +14,12 @@ export function FormField({ label, error, style, ...props }: FormFieldProps) {
       <Text style={styles.label}>{label}</Text>
       <TextInput
         accessibilityLabel={label}
-        accessibilityState={{ invalid: Boolean(error) }}
+        accessibilityHint={error}
         placeholderTextColor={colors.inkMuted}
         style={[styles.input, error ? styles.inputError : null, style]}
         {...props}
       />
-      {error ? <Text style={styles.error}>{error}</Text> : null}
+      {error ? <Text accessibilityRole="alert" style={styles.error}>{error}</Text> : null}
     </View>
   );
 }
