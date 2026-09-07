@@ -1,4 +1,7 @@
-import { Pressable, SafeAreaView, ScrollView, StyleSheet, Text, View } from 'react-native';
+import { useRouter } from 'expo-router';
+import { SafeAreaView, ScrollView, StyleSheet, Text, View } from 'react-native';
+
+import { AppButton } from '@/components/ui/app-button';
 
 const FEATURES = [
   ['01', 'Adım adım öğren', 'Dersleri küçük, uygulanabilir aşamalara böl.'],
@@ -7,6 +10,8 @@ const FEATURES = [
 ] as const;
 
 export default function WelcomeScreen() {
+  const router = useRouter();
+
   return (
     <SafeAreaView style={styles.safeArea}>
       <ScrollView contentContainerStyle={styles.content}>
@@ -38,15 +43,13 @@ export default function WelcomeScreen() {
           ))}
         </View>
 
-        <Pressable
-          accessibilityRole="button"
-          accessibilityLabel="DrawCoach geliştirme önizlemesi"
-          disabled
-          style={styles.primaryButton}
-        >
-          <Text style={styles.primaryButtonText}>İlk ders yakında burada</Text>
-        </Pressable>
-        <Text style={styles.devNote}>Geliştirme önizlemesi • MVP foundation</Text>
+        <AppButton
+          label="Hemen Başla"
+          accessibilityHint="Kişisel öğrenme profili akışını açar"
+          onPress={() => router.push('/(onboarding)')}
+        />
+        <AppButton label="Uygulama iskeletini gör" variant="secondary" onPress={() => router.push('/(tabs)')} />
+        <Text style={styles.devNote}>Geliştirme önizlemesi • Sahte AI sonucu kullanılmıyor</Text>
       </ScrollView>
     </SafeAreaView>
   );
@@ -54,16 +57,8 @@ export default function WelcomeScreen() {
 
 const styles = StyleSheet.create({
   safeArea: { flex: 1, backgroundColor: '#F7F3EC' },
-  content: { padding: 24, paddingBottom: 40, gap: 28 },
-  artCard: {
-    height: 265,
-    overflow: 'hidden',
-    borderRadius: 28,
-    backgroundColor: '#DCE8E2',
-    padding: 22,
-    borderWidth: 1,
-    borderColor: '#CAD8D1',
-  },
+  content: { padding: 24, paddingBottom: 40, gap: 24 },
+  artCard: { height: 250, overflow: 'hidden', borderRadius: 28, backgroundColor: '#DCE8E2', padding: 22, borderWidth: 1, borderColor: '#CAD8D1' },
   artEyebrow: { fontSize: 11, letterSpacing: 2.2, fontWeight: '700', color: '#234941' },
   sun: { position: 'absolute', width: 54, height: 54, borderRadius: 27, backgroundColor: '#E9C98D', top: 52, right: 38 },
   mountainBack: { position: 'absolute', width: 210, height: 210, backgroundColor: '#A8BCB4', transform: [{ rotate: '45deg' }], bottom: -93, left: -14, borderRadius: 12 },
@@ -73,14 +68,12 @@ const styles = StyleSheet.create({
   headingBlock: { gap: 8 },
   brand: { fontSize: 42, lineHeight: 46, fontWeight: '700', color: '#173C36', letterSpacing: -1.4 },
   tagline: { fontSize: 18, lineHeight: 26, color: '#596A65', maxWidth: 330 },
-  featureList: { gap: 18 },
+  featureList: { gap: 16 },
   featureRow: { flexDirection: 'row', gap: 14, alignItems: 'flex-start' },
   numberBadge: { width: 42, height: 42, borderRadius: 14, alignItems: 'center', justifyContent: 'center', backgroundColor: '#E5ECE8' },
   numberText: { color: '#214D45', fontWeight: '800', fontSize: 12 },
   featureCopy: { flex: 1, gap: 3 },
   featureTitle: { color: '#1F3934', fontSize: 16, fontWeight: '700' },
   featureBody: { color: '#6A7874', fontSize: 14, lineHeight: 20 },
-  primaryButton: { minHeight: 56, borderRadius: 18, alignItems: 'center', justifyContent: 'center', backgroundColor: '#173F38', opacity: 0.82 },
-  primaryButtonText: { color: '#FFFFFF', fontWeight: '700', fontSize: 16 },
   devNote: { textAlign: 'center', color: '#8B9692', fontSize: 12 },
 });
