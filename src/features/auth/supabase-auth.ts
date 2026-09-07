@@ -1,7 +1,7 @@
 import type { AuthError } from '@supabase/supabase-js';
 
 import { getSupabaseClient } from '@/lib/supabase/client';
-import type { SessionBootstrapResult } from './session-bootstrap';
+import type { SessionBootstrapResult } from './auth-types';
 
 export class AuthActionError extends Error {
   constructor(
