@@ -2,6 +2,7 @@ import type { PropsWithChildren } from 'react';
 import { createContext, useCallback, useContext, useEffect, useMemo, useState } from 'react';
 
 import { logger } from '@/lib/logger';
+import { bootstrapSupabaseSession } from './supabase-auth';
 
 export type SessionPhase = 'initializing' | 'signed-out' | 'onboarding-incomplete' | 'ready';
 
@@ -13,7 +14,7 @@ export type SessionBootstrapResult = {
 type SessionContextValue = {
   phase: SessionPhase;
   userId?: string;
-  refresh: () => Promise<void>;
+  refresh: () => Promise<SessionBootstrapResult>;
 };
 
 type SessionBootstrapProviderProps = PropsWithChildren<{
@@ -22,13 +23,9 @@ type SessionBootstrapProviderProps = PropsWithChildren<{
 
 const SessionContext = createContext<SessionContextValue | null>(null);
 
-async function developmentBootstrap(): Promise<SessionBootstrapResult> {
-  return { phase: 'signed-out' };
-}
-
 export function SessionBootstrapProvider({
   children,
-  bootstrap = developmentBootstrap,
+  bootstrap = bootstrapSupabaseSession,
 }: SessionBootstrapProviderProps) {
   const [snapshot, setSnapshot] = useState<{ phase: SessionPhase; userId?: string }>({
     phase: 'initializing',
@@ -39,11 +36,14 @@ export function SessionBootstrapProvider({
     try {
       const next = await bootstrap();
       setSnapshot(next);
+      return next;
     } catch (error) {
       logger.error('Session bootstrap failed', {
         errorName: error instanceof Error ? error.name : 'unknown',
       });
-      setSnapshot({ phase: 'signed-out' });
+      const fallback: SessionBootstrapResult = { phase: 'signed-out' };
+      setSnapshot(fallback);
+      return fallback;
     }
   }, [bootstrap]);
 
