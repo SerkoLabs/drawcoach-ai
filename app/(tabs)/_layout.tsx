@@ -1,6 +1,7 @@
 import { Tabs } from 'expo-router';
 
 import { RequireSession } from '@/features/auth/require-session';
+import { t } from '@/i18n';
 import { colors } from '@/theme/tokens';
 
 export default function TabsLayout() {
@@ -14,10 +15,10 @@ export default function TabsLayout() {
           tabBarStyle: { backgroundColor: colors.surface, borderTopColor: colors.border },
         }}
       >
-        <Tabs.Screen name="index" options={{ title: 'Ana Sayfa' }} />
-        <Tabs.Screen name="progress" options={{ title: 'Gelişim' }} />
-        <Tabs.Screen name="history" options={{ title: 'Çalışmalar' }} />
-        <Tabs.Screen name="settings" options={{ title: 'Ayarlar' }} />
+        <Tabs.Screen name="index" options={{ title: t('tabs.home') }} />
+        <Tabs.Screen name="progress" options={{ title: t('tabs.progress') }} />
+        <Tabs.Screen name="history" options={{ title: t('tabs.history') }} />
+        <Tabs.Screen name="settings" options={{ title: t('tabs.settings') }} />
       </Tabs>
     </RequireSession>
   );
