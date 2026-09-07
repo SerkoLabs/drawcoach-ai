@@ -57,3 +57,14 @@ export async function signOutCurrentUser() {
   const { error } = await getSupabaseClient().auth.signOut();
   if (error) throw mapAuthError(error);
 }
+
+export function subscribeToMeaningfulAuthChanges(onChange: () => void): () => void {
+  const { data } = getSupabaseClient().auth.onAuthStateChange((event) => {
+    if (event !== 'SIGNED_IN' && event !== 'SIGNED_OUT' && event !== 'USER_UPDATED') return;
+    // Supabase warns against making other auth calls while the auth callback lock is held.
+    // Defer bootstrap until after the callback returns.
+    setTimeout(onChange, 0);
+  });
+
+  return () => data.subscription.unsubscribe();
+}
