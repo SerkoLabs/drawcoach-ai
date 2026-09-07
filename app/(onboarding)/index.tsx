@@ -4,15 +4,16 @@ import { StyleSheet, Text, View } from 'react-native';
 import { AppButton } from '@/components/ui/app-button';
 import { Card } from '@/components/ui/card';
 import { Screen } from '@/components/ui/screen';
+import { t } from '@/i18n';
 import { colors, spacing, typeScale } from '@/theme/tokens';
 
 const PROFILE_STEPS = [
-  'Yaş aralığın',
-  'Çizim seviyen',
-  'Hedefin',
-  'Uzmanlaşmak istediğin kategori',
-  'Kullanacağın malzeme',
-  'Haftalık çalışma tempon',
+  t('onboarding.step.age'),
+  t('onboarding.step.level'),
+  t('onboarding.step.goal'),
+  t('onboarding.step.category'),
+  t('onboarding.step.medium'),
+  t('onboarding.step.schedule'),
 ] as const;
 
 export default function OnboardingStartScreen() {
@@ -20,9 +21,9 @@ export default function OnboardingStartScreen() {
 
   return (
     <Screen
-      title="Önce seni biraz tanıyalım"
-      description="Cevapların, ders sırasını ve geri bildirim rubriğini kişiselleştirmek için kullanılacak."
-      footer={<AppButton label="Profil adımlarına geç" disabled onPress={() => undefined} />}
+      title={t('onboarding.title')}
+      description={t('onboarding.description')}
+      footer={<AppButton label={t('onboarding.start')} disabled onPress={() => undefined} />}
     >
       <Card>
         {PROFILE_STEPS.map((step, index) => (
@@ -34,8 +35,8 @@ export default function OnboardingStartScreen() {
           </View>
         ))}
       </Card>
-      <AppButton label="Giriş ekranını gör" variant="secondary" onPress={() => router.push('/(auth)')} />
-      <Text style={styles.note}>Form alanları onboarding özelliği uygulanırken bu iskelete eklenecek.</Text>
+      <AppButton label={t('onboarding.showAuth')} variant="secondary" onPress={() => router.push('/(auth)')} />
+      <Text style={styles.note}>{t('onboarding.devNote')}</Text>
     </Screen>
   );
 }
