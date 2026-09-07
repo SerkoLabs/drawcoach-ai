@@ -1,0 +1,21 @@
+# OS / editors
+.DS_Store
+Thumbs.db
+.vscode/
+.idea/
+
+# Environment / secrets
+.env
+.env.*
+!.env.example
+
+# Common JS/mobile
+node_modules/
+.expo/
+dist/
+build/
+coverage/
+
+# Local agent settings
+.claude/settings.local.json
+.github/copilot/settings.local.json
