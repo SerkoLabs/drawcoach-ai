@@ -2,14 +2,10 @@ import type { PropsWithChildren } from 'react';
 import { createContext, useCallback, useContext, useEffect, useMemo, useState } from 'react';
 
 import { logger } from '@/lib/logger';
+import type { SessionBootstrapResult, SessionPhase } from './auth-types';
 import { bootstrapSupabaseSession } from './supabase-auth';
 
-export type SessionPhase = 'initializing' | 'signed-out' | 'onboarding-incomplete' | 'ready';
-
-export type SessionBootstrapResult = {
-  phase: Exclude<SessionPhase, 'initializing'>;
-  userId?: string;
-};
+export type { SessionBootstrapResult, SessionPhase } from './auth-types';
 
 type SessionContextValue = {
   phase: SessionPhase;
