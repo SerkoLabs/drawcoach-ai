@@ -1,0 +1,14 @@
+{
+  "expo": {
+    "name": "DrawCoach AI",
+    "slug": "drawcoach-ai",
+    "version": "0.1.0",
+    "orientation": "portrait",
+    "userInterfaceStyle": "automatic",
+    "scheme": "drawcoach",
+    "plugins": ["expo-router"],
+    "experiments": {
+      "typedRoutes": true
+    }
+  }
+}
