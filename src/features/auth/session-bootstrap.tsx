@@ -1,5 +1,5 @@
 import type { PropsWithChildren } from 'react';
-import { createContext, useContext, useEffect, useMemo, useState } from 'react';
+import { createContext, useCallback, useContext, useEffect, useMemo, useState } from 'react';
 
 import { logger } from '@/lib/logger';
 
@@ -34,7 +34,7 @@ export function SessionBootstrapProvider({
     phase: 'initializing',
   });
 
-  async function refresh() {
+  const refresh = useCallback(async () => {
     setSnapshot({ phase: 'initializing' });
     try {
       const next = await bootstrap();
@@ -45,17 +45,15 @@ export function SessionBootstrapProvider({
       });
       setSnapshot({ phase: 'signed-out' });
     }
-  }
+  }, [bootstrap]);
 
   useEffect(() => {
     void refresh();
-    // bootstrap is injected once per provider boundary; adapters should memoize it.
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [bootstrap]);
+  }, [refresh]);
 
   const value = useMemo<SessionContextValue>(
     () => ({ phase: snapshot.phase, userId: snapshot.userId, refresh }),
-    [snapshot.phase, snapshot.userId],
+    [refresh, snapshot.phase, snapshot.userId],
   );
 
   return <SessionContext.Provider value={value}>{children}</SessionContext.Provider>;
