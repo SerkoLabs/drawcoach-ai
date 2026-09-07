@@ -3,7 +3,7 @@ import { createContext, useCallback, useContext, useEffect, useMemo, useState } 
 
 import { logger } from '@/lib/logger';
 import type { SessionBootstrapResult, SessionPhase } from './auth-types';
-import { bootstrapSupabaseSession } from './supabase-auth';
+import { bootstrapSupabaseSession, subscribeToMeaningfulAuthChanges } from './supabase-auth';
 
 export type { SessionBootstrapResult, SessionPhase } from './auth-types';
 
@@ -45,6 +45,19 @@ export function SessionBootstrapProvider({
 
   useEffect(() => {
     void refresh();
+  }, [refresh]);
+
+  useEffect(() => {
+    try {
+      return subscribeToMeaningfulAuthChanges(() => {
+        void refresh();
+      });
+    } catch (error) {
+      logger.warn('Auth event subscription is unavailable in this environment', {
+        errorName: error instanceof Error ? error.name : 'unknown',
+      });
+      return undefined;
+    }
   }, [refresh]);
 
   const value = useMemo<SessionContextValue>(
