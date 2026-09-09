@@ -48,6 +48,86 @@ The app builds a learning path from the learner's age band, experience level, go
 - Open-ended support for every art category and medium.
 - Certificates, competitions or public rankings.
 - Subscription/paywall activation before the learning loop is validated.
+
+---
+
+# Implementation (MVP app)
+
+This repository contains a working **Expo (React Native)** implementation of the DrawCoach AI MVP,
+including the full learning loop and **real Claude vision feedback**.
+
+## Tech stack
+
+- **Expo SDK 57** + **Expo Router** (file-based navigation, typed routes, server API routes)
+- **React Native 0.86** / **React 19** / **TypeScript** (strict mode)
+- **AsyncStorage** for private on-device persistence
+- **expo-image-picker**, **expo-image-manipulator**, **expo-file-system** for capturing, normalizing and durably storing artwork
+- **Claude vision** (Anthropic API) for structured, rubric-based critique, called from a **server-side** route so the API key never reaches the client
+
+## Core loop (implemented)
+
+Onboarding → learning path → lesson → checkpoint. At each checkpoint you photograph or upload your
+work and receive structured feedback — **one strength, the highest-priority issue, why it matters, a
+concrete correction, an optional micro-exercise**, plus per-dimension rubric scores. Resubmit to
+compare first vs latest and push your scores up. Completed checkpoints feed a **skill profile**
+(composition, perspective/proportion, value/light, color, medium control) and a **next-focus
+recommendation** based on your recent weakest dimension.
+
+Four seed paths ship out of the box: Landscape and Portrait, each in Pencil and Watercolor.
+
+## Getting started
+
+```bash
+npm install
+cp .env.example .env        # then add your ANTHROPIC_API_KEY
+npx expo start              # press i (iOS), a (Android), or w (web)
+```
+
+## Configuring Claude feedback
+
+Set these in `.env` (see `.env.example`):
+
+| Variable | Required | Purpose |
+| --- | --- | --- |
+| `ANTHROPIC_API_KEY` | yes | Server-side key used by `/api/critique`. Never bundled into the app. |
+| `CRITIQUE_MODEL` | no | Overrides the model. Defaults to `claude-opus-5`; use `claude-sonnet-5` for lower cost at higher volume. |
+| `EXPO_PUBLIC_API_URL` | no | For production **native** builds: the deployed server base URL. In dev, web uses same-origin and native derives the Metro host automatically. |
+
+The app posts the image to the `/api/critique` server route, which calls Claude with a strict
+tool schema and returns validated JSON. Without a key, the app runs but each submission returns a
+clear "feedback service not configured" message.
+
+## Project structure
+
+```
+src/
+  domain/       types, skill dimensions, progress & skill-profile derivations
+  content/      the four seed learning paths (lessons, checkpoints, rubrics)
+  store/        AsyncStorage persistence, app state, artwork files, capture
+  services/     client-side critique request (no SDK — bundle-safe)
+  app/
+    api/critique+api.ts   server-side Claude vision endpoint
+    onboarding.tsx        onboarding wizard
+    (tabs)/               Today, Path, Profile
+    lesson/[id].tsx       lesson detail
+    checkpoint/[lessonId].tsx   capture → critique → resubmit
+  components/ui/  design system (Screen, Button, Card, SkillBar, FeedbackView, …)
+```
+
+## Privacy
+
+Profile, progress and artwork stay on the device. Images are sent to the feedback service only at
+the moment you submit a checkpoint. **Profile → Delete all artwork** removes every stored image
+(progress is kept); **Delete account** erases everything from the device.
+
+## Scripts
+
+```bash
+npm run start      # Expo dev server
+npm run ios        # / android / web
+npm run typecheck  # tsc --noEmit
+npm run lint       # eslint (expo config)
+```
 - Users under 13.
 
 ## Differentiation
